@@ -1,6 +1,13 @@
 FROM node:18-alpine3.15
 
 WORKDIR /app
-COPY . . 
-RUN npm install
-CMD ["node","/app/src/index.js"]
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
+# install application dependencies
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm i
+# add app
+COPY . ./
+# start app
+CMD ["npm", "start"]
